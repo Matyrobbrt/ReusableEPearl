@@ -10,10 +10,10 @@ public class PearlConfig {
 	public static final ForgeConfigSpec.ConfigValue<Integer> ultra_pearl_count;
 	
 	static {
-		BUILDER.push("Config for reusable ender pearls.");
+		BUILDER.push("Config for reusable ender pearls");
 		
 		advanced_pearl_count = BUILDER.comment("This is the amount of durability (ender pearls) an Advanced Ender Pearl has. Default is 20.").define("Advanced Pearl Count", 20);
-		ultra_pearl_count = BUILDER.comment("This is the amount of durability (ender pearls) an Ultra Ender Pearl has. Default is 200.").define("Ultra Pearl Count", 200);
+		ultra_pearl_count = BUILDER.comment("This is the amount of durability (ender pearls) an Ultra Ender Pearl has. Default is 180.").define("Ultra Pearl Count", 180);
 		
 		BUILDER.pop();
 		SPEC = BUILDER.build();

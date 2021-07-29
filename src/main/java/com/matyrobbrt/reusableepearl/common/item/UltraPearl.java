@@ -25,7 +25,7 @@ public class UltraPearl extends Item {
 	public ActionResult<ItemStack> use(World worldIn, PlayerEntity player, Hand hand) {
 
 		ItemStack stack = player.getMainHandItem();
-
+		
 		EnderPearlEntity entity = new EnderPearlEntity(worldIn, player);
 		entity.setOwner(player);
 		entity.shootFromRotation(player, player.xRot, player.yRot, 0.0F, 1.5F, 1.0F);
