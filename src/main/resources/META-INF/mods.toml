@@ -10,7 +10,7 @@ issueTrackerURL="https://github.com/Matyrobbrt/ReusableEPearl/issues" #optional
 
 modId="reusableepearl" #mandatory
 
-version="1.0" #mandatory
+version="1.5" #mandatory
 
 displayName="Reusable Ender Pearl" #mandatory
 
