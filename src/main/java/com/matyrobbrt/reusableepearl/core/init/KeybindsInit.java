@@ -4,15 +4,15 @@ import java.awt.event.KeyEvent;
 
 import com.matyrobbrt.reusableepearl.ReusableEPearl;
 
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fmlclient.registry.ClientRegistry;
 
 @OnlyIn(Dist.CLIENT)
 public class KeybindsInit {
-	public static KeyBinding throwPearl;
+	public static KeyMapping throwPearl;
 	
 	public static void register(final FMLClientSetupEvent event) {
 		throwPearl = create("throw_pearl", KeyEvent.VK_P);
@@ -20,7 +20,7 @@ public class KeybindsInit {
 		ClientRegistry.registerKeyBinding(throwPearl);
 	}
 	
-	private static KeyBinding create(String name, int key) {
-		return new KeyBinding("key." + ReusableEPearl.MOD_ID + "." + name, key, "key.category" + ReusableEPearl.MOD_ID);
+	private static KeyMapping create(String name, int key) {
+		return new KeyMapping("key." + ReusableEPearl.MOD_ID + "." + name, key, "key.category" + ReusableEPearl.MOD_ID);
 	}
 }

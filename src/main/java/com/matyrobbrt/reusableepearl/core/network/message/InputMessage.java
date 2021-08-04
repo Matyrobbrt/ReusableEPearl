@@ -4,14 +4,14 @@ import java.util.function.Supplier;
 
 import com.matyrobbrt.reusableepearl.core.init.ItemInit;
 
-import net.minecraft.entity.item.EnderPearlEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.projectile.ThrownEnderpearl;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 public class InputMessage {
 
@@ -27,11 +27,11 @@ public class InputMessage {
 		this.key = key;
 	}
 
-	public static void encode(InputMessage message, PacketBuffer buffer) {
+	public static void encode(InputMessage message, FriendlyByteBuf buffer) {
 		buffer.writeInt(message.key);
 	}
 
-	public static InputMessage decode(PacketBuffer buffer) {
+	public static InputMessage decode(FriendlyByteBuf buffer) {
 		return new InputMessage(buffer.readInt());
 	}
 
@@ -39,43 +39,42 @@ public class InputMessage {
 		NetworkEvent.Context context = contextSupplier.get();
 		context.enqueueWork(() -> {
 
-			ServerPlayerEntity playerEntity = context.getSender();
-			ServerWorld worldIn = playerEntity.getLevel();
+			ServerPlayer playerEntity = context.getSender();
+			ServerLevel worldIn = playerEntity.getLevel();
 			ResourceLocation upearl_id = ItemInit.ULTRA_PEARL.get().getRegistryName();
 			ItemStack stack = null;
-
+			
 			// Off hand
-			if (playerEntity.getOffhandItem().getItem().getRegistryName() == upearl_id) {
-				stack = playerEntity.getOffhandItem();
-			} else {
-				// Inventory
-				for (int i = 0; i <= 35; ++i) {
-					ResourceLocation idLocation = playerEntity.inventory.getItem(i).getItem().getRegistryName();
-					if (idLocation == upearl_id) {
-						stack = playerEntity.inventory.getItem(i);
-						break;
-					}
-				}
-			}
+						if (playerEntity.getOffhandItem().getItem().getRegistryName() == upearl_id) {
+							stack = playerEntity.getOffhandItem();
+						} else {
+							// Inventory
+							for (int i = 0; i <= 35; ++i) {
+								ResourceLocation idLocation = playerEntity.getInventory().getItem(i).getItem().getRegistryName();
+								if (idLocation == upearl_id) {
+									stack = playerEntity.getInventory().getItem(i);
+									break;
+								}
+							}
+						}
 
-			if (stack != null) {
-				EnderPearlEntity entity = new EnderPearlEntity(worldIn, playerEntity);
-				entity.setOwner(playerEntity);
-				entity.shootFromRotation(playerEntity, playerEntity.xRot, playerEntity.yRot, 0.0F, 1.5F, 1.0F);
-				worldIn.addFreshEntity(entity);
+						if (stack != null) {
+							ThrownEnderpearl entity = new ThrownEnderpearl(worldIn, playerEntity);
+							entity.setOwner(playerEntity);
+							entity.shootFromRotation(playerEntity, playerEntity.getXRot(), playerEntity.getYRot(), 0.0F, 1.5F, 1.0F);
+							worldIn.addFreshEntity(entity);
 
-				// Durability remove
-				int DamageValue = stack.getDamageValue() + 1;
-				stack.setDamageValue(DamageValue);
-				if (DamageValue == 180) {
-					stack.shrink(1);
-				}
-			} else {
-				playerEntity.sendMessage(
-						new StringTextComponent("\u00A74" + "You don't have an Ultra Ender Pearl on you!"),
-						playerEntity.getUUID());
-			}
-			// System.out.println(playerEntity.inventory.items);
+							// Durability remove
+							int DamageValue = stack.getDamageValue() + 1;
+							stack.setDamageValue(DamageValue);
+							if (DamageValue == 180) {
+								stack.shrink(1);
+							}
+						} else {
+							playerEntity.sendMessage(
+									new TextComponent("\u00A74" + "You don't have an Ultra Ender Pearl on you!"),
+									playerEntity.getUUID());
+						}
 		});
 		context.setPacketHandled(true);
 	}

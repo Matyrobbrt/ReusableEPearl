@@ -2,31 +2,31 @@ package com.matyrobbrt.reusableepearl.common.item;
 
 //import com.matyrobbrt.reusableepearl.core.config.PearlConfig;
 
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.item.EnderPearlEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.entity.projectile.ThrownEnderpearl;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.Level;
 
 public class AdvancedPearl extends Item {
 	
 	public AdvancedPearl() {
-		super(new Item.Properties().stacksTo(1).setNoRepair().tab(ItemGroup.TAB_MISC).durability(20));
+		super(new Item.Properties().stacksTo(1).setNoRepair().tab(CreativeModeTab.TAB_MISC).durability(20));
 	}
 	
 	@Override
-	public ActionResult<ItemStack> use(World worldIn, PlayerEntity player, Hand hand) {
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player player, InteractionHand hand) {
 		
 		ItemStack stack = player.getMainHandItem();
 		
-		EnderPearlEntity entity = new EnderPearlEntity(worldIn, player);
+		ThrownEnderpearl entity = new ThrownEnderpearl(worldIn, player);
 		entity.setOwner(player);
-		entity.shootFromRotation(player, player.xRot, player.yRot, 0.0F, 1.5F, 1.0F);
+		entity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
 		worldIn.addFreshEntity(entity);
 		
 		//Durability remove
