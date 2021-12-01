@@ -5,10 +5,11 @@ import java.awt.event.KeyEvent;
 import com.matyrobbrt.reusableepearl.ReusableEPearl;
 
 import net.minecraft.client.KeyMapping;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fmlclient.registry.ClientRegistry;
 
 @OnlyIn(Dist.CLIENT)
 public class KeybindsInit {
