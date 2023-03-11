@@ -1,73 +1,56 @@
 package com.matyrobbrt.reusableepearl.core.config;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.Expose;
 import com.matyrobbrt.reusableepearl.ReusableEPearl;
+import net.minecraftforge.fml.loading.FMLPaths;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Map;
 
 public class PearlConfig {
 
-	private static final Gson GSON = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting()
-			.create();
-	protected String root = ReusableEPearl.CONFIG_DIR_PATH;
-	protected String extension = ".json";
+	public final int uses;
+	public final boolean supportsKeybind;
+	public final int cooldown;
 
-	public void generateConfig() {
-		this.reset();
-
-		try {
-			this.writeConfig();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public PearlConfig(int uses, boolean supportsKeybind, int cooldown) {
+		this.uses = uses;
+		this.supportsKeybind = supportsKeybind;
+		this.cooldown = cooldown;
 	}
 
-	private File getConfigFile() { return new File(this.root + this.getName() + this.extension); }
-
-	public PearlConfig readConfig() {
-		try {
-			return GSON.fromJson(new FileReader(this.getConfigFile()), this.getClass());
-		} catch (FileNotFoundException e) {
-			this.generateConfig();
-		}
-
-		return this;
-	}
-
-	public void writeConfig() throws IOException {
-		File dir = new File(this.root);
-		if (!dir.exists() && !dir.mkdirs())
-			return;
-		if (!this.getConfigFile().exists() && !this.getConfigFile().createNewFile())
-			return;
-		FileWriter writer = new FileWriter(this.getConfigFile());
-		GSON.toJson(this, writer);
-		writer.flush();
-		writer.close();
-	}
-
-	@Expose
-	public int advancedPearlUses;
-	@Expose
-	public int ultraPearlUses;
-
-	protected void reset() {
-		this.advancedPearlUses = 20;
-		this.ultraPearlUses = 180;
-	}
-	
-	public String getName() { return "pearl_config"; }
-	
-	public static PearlConfig CONFIG;
+	private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
+	private static final Map<String, PearlConfig> DEFAULT = Map.of(
+			"advanced_pearl", new PearlConfig(20, false, 30),
+			"ultra_pearl", new PearlConfig(180, true, 15)
+	);
+	public static Map<String, PearlConfig> CONFIG = DEFAULT;
 
 	public static void register() {
-		CONFIG = new PearlConfig().readConfig();
+		final Path configPath = FMLPaths.CONFIGDIR.get().resolve("reusableepearls.json");
+		if (Files.exists(configPath)) {
+			try (final var reader = Files.newBufferedReader(configPath)) {
+				CONFIG = GSON.fromJson(reader, new TypeToken<Map<String, PearlConfig>>() {}.getType());
+			} catch (Exception ex) {
+				ReusableEPearl.LOGGER.error("Encountered exception reading config: ", ex);
+				ReusableEPearl.LOGGER.info("Resetting config.");
+				writeDefault(configPath);
+			}
+		} else {
+			writeDefault(configPath);
+		}
 		ReusableEPearl.LOGGER.info("Configs loaded!");
 	}
+
+	private static void writeDefault(Path path) {
+		try (final var writer = Files.newBufferedWriter(path)) {
+			GSON.toJson(DEFAULT, writer);
+		} catch (Exception ex) {
+			ReusableEPearl.LOGGER.error("Encountered exception writing config: ", ex);
+		}
+	}
+
 }

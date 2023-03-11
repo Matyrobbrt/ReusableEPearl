@@ -1,24 +1,22 @@
 package com.matyrobbrt.reusableepearl.core.init;
 
+import com.matyrobbrt.reusableepearl.ReusableEPearl;
+import net.minecraft.client.KeyMapping;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
 import java.awt.event.KeyEvent;
 
-import com.matyrobbrt.reusableepearl.ReusableEPearl;
-
-import net.minecraft.client.KeyMapping;
-
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ClientRegistry;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-
-@OnlyIn(Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = ReusableEPearl.MOD_ID, bus= Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class KeybindsInit {
 	public static KeyMapping throwPearl;
-	
-	public static void register(final FMLClientSetupEvent event) {
-		throwPearl = create("throw_pearl", KeyEvent.VK_P);
-		
-		ClientRegistry.registerKeyBinding(throwPearl);
+
+	@SubscribeEvent
+	static void register(final RegisterKeyMappingsEvent event) {
+		event.register(throwPearl = create("throw_pearl", KeyEvent.VK_V));
+		throwPearl = create("throw_pearl", KeyEvent.VK_V);
 	}
 	
 	private static KeyMapping create(String name, int key) {

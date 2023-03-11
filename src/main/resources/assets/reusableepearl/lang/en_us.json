@@ -3,5 +3,7 @@
 	"item.reusableepearl.ultra_pearl": "Ultra Ender Pearl",
 	
 	"key.categoryreusableepearl": "Reusable Ender Pearl",
-	"key.reusableepearl.throw_pearl": "Throw Pearl"
+	"key.reusableepearl.throw_pearl": "Throw Pearl",
+	"tooltip.reusableepearl.supports_keybinds": "This pearl supports keybinds. Throw on %s",
+	"message.reusableepearl.no_pearl": "You don't have any pearl that supports keybinds on you, or they're on cooldown!"
 }

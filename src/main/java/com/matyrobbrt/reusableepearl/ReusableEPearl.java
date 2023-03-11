@@ -29,9 +29,6 @@ public class ReusableEPearl {
 		bus.addListener(this::commonSetup);
 		
 		ItemInit.ITEMS.register(bus);
-		
-		MinecraftForge.EVENT_BUS.register(this);
-		
 	}
 	
 	public void commonSetup(final FMLCommonSetupEvent event) {
