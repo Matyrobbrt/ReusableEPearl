@@ -13,7 +13,7 @@ apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remappe
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.0'
+version = '1.1'
 group = 'com.matyrobbrt.reusableepearl' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'reusableepearl-1.19.2'
 

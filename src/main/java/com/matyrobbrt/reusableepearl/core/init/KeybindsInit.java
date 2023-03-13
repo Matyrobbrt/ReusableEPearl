@@ -1,6 +1,7 @@
 package com.matyrobbrt.reusableepearl.core.init;
 
 import com.matyrobbrt.reusableepearl.ReusableEPearl;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
@@ -15,8 +16,7 @@ public class KeybindsInit {
 
 	@SubscribeEvent
 	static void register(final RegisterKeyMappingsEvent event) {
-		event.register(throwPearl = create("throw_pearl", KeyEvent.VK_V));
-		throwPearl = create("throw_pearl", KeyEvent.VK_V);
+		event.register(throwPearl = create("throw_pearl", InputConstants.KEY_V));
 	}
 	
 	private static KeyMapping create(String name, int key) {
